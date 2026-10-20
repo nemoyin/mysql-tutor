@@ -74,12 +74,12 @@ class RuntimeManager:
         if os.name == 'nt':
             import msvcrt
             self._lock_file = open(self.paths.root / 'data/instance.lock', 'a+b')
-            self._lock_file.seek(0)
-            if not self._lock_file.read(1):
-                self._lock_file.write(b'0')
-                self._lock_file.flush()
-            self._lock_file.seek(0)
             try:
+                self._lock_file.seek(0)
+                if not self._lock_file.read(1):
+                    self._lock_file.write(b'0')
+                    self._lock_file.flush()
+                self._lock_file.seek(0)
                 msvcrt.locking(self._lock_file.fileno(), msvcrt.LK_NBLCK, 1)
             except OSError:
                 self._lock_file.close()

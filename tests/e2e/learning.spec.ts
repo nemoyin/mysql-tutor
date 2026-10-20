@@ -2,6 +2,8 @@ import {test,expect} from '@playwright/test';
 import path from 'node:path';
 
 test('learner can run without submitting, complete a problem and recover progress',async({page})=>{
+ const external:string[]=[];
+ await page.route('**/*',route=>{const url=new URL(route.request().url());if(url.hostname==='127.0.0.1')return route.continue();external.push(url.href);return route.abort()});
  await page.goto('/');
  await expect(page.locator('.welcome-form,.app-sidebar').first()).toBeVisible();
  if(await page.locator('.profile-button').isVisible())await page.locator('.profile-button').click();
@@ -29,4 +31,8 @@ test('learner can run without submitting, complete a problem and recover progres
  await editor.click();await page.keyboard.type('SELECT product_name, price FROM products LIMIT 3;');
  await page.getByRole('button',{name:'运行 SQL',exact:true}).click();
  await expect(page.getByText('执行成功 · 3 行')).toBeVisible();
+ await page.setViewportSize({width:1280,height:720});
+ await expect(page.getByRole('button',{name:'运行 SQL',exact:true})).toBeVisible();
+ await page.screenshot({path:path.resolve(__dirname,'../../docs/screenshots/lab-1280.png'),fullPage:true});
+ expect(external).toEqual([]);
 });
