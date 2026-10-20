@@ -1,0 +1,93 @@
+{
+  "id": "08",
+  "title": "综合练习",
+  "subtitle": "用查询回答业务问题",
+  "lesson": "先确定每行输出代表什么，再选择需要的表和关联键。明确业务口径，先筛选再统计，最后排序。销售额按 quantity × unit_price 计算，不要用商品当前标价替代成交价。先从少量字段运行观察，再逐步组合完整查询。",
+  "example_sql": "SELECT o.status, SUM(i.quantity*i.unit_price) AS sales FROM orders o JOIN order_items i ON o.order_id=i.order_id GROUP BY o.status;",
+  "problems": [
+    {
+      "id": "08-01",
+      "chapter_id": "08",
+      "title": "各城市的有效订单销售额",
+      "prompt": "关联客户、订单和明细，排除 cancelled 订单，按城市统计销售额。依次输出 city、sales（保留 2 位小数），不要求排序。",
+      "lesson": "先确定每行输出代表什么，再选择需要的表和关联键。明确业务口径，先筛选再统计，最后排序。销售额按 quantity × unit_price 计算，不要用商品当前标价替代成交价。先从少量字段运行观察，再逐步组合完整查询。",
+      "example_sql": "SELECT o.status, SUM(i.quantity*i.unit_price) AS sales FROM orders o JOIN order_items i ON o.order_id=i.order_id GROUP BY o.status;",
+      "starter_sql": "",
+      "hints": [
+        "先排除取消订单，再按客户所在城市汇总明细金额。",
+        "WHERE o.status <> 'cancelled' GROUP BY c.city"
+      ],
+      "answer_sql": "SELECT c.city,ROUND(SUM(i.quantity*i.unit_price),2) AS sales FROM customers c JOIN orders o ON c.customer_id=o.customer_id JOIN order_items i ON o.order_id=i.order_id WHERE o.status<>'cancelled' GROUP BY c.city",
+      "wrong_sql": "SELECT c.city,ROUND(SUM(i.quantity*i.unit_price),2) AS sales FROM customers c JOIN orders o ON c.customer_id=o.customer_id JOIN order_items i ON o.order_id=i.order_id GROUP BY c.city",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "08-02",
+      "chapter_id": "08",
+      "title": "每月完成了多少笔订单",
+      "prompt": "只统计 completed 订单，按下单月份分组，输出 month（DATE_FORMAT 为 YYYY-MM）、order_count；月份升序。",
+      "lesson": "先确定每行输出代表什么，再选择需要的表和关联键。明确业务口径，先筛选再统计，最后排序。销售额按 quantity × unit_price 计算，不要用商品当前标价替代成交价。先从少量字段运行观察，再逐步组合完整查询。",
+      "example_sql": "SELECT o.status, SUM(i.quantity*i.unit_price) AS sales FROM orders o JOIN order_items i ON o.order_id=i.order_id GROUP BY o.status;",
+      "starter_sql": "",
+      "hints": [
+        "统计订单数量只需要订单表，不要关联明细导致重复计数。",
+        "SELECT DATE_FORMAT(order_date,'%Y-%m') AS month,COUNT(*) AS order_count ... ORDER BY month"
+      ],
+      "answer_sql": "SELECT DATE_FORMAT(order_date,'%Y-%m') AS month,COUNT(*) AS order_count FROM orders WHERE status='completed' GROUP BY DATE_FORMAT(order_date,'%Y-%m') ORDER BY month",
+      "wrong_sql": "SELECT DATE_FORMAT(order_date,'%Y-%m') AS month,COUNT(*) AS order_count FROM orders GROUP BY DATE_FORMAT(order_date,'%Y-%m') ORDER BY month",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": true,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "08-03",
+      "chapter_id": "08",
+      "title": "已完成订单的分类销售额",
+      "prompt": "关联分类、商品、明细和订单，只统计 completed 订单，输出 category_name、sales（保留 2 位小数），销售额降序，同额分类名称升序。",
+      "lesson": "先确定每行输出代表什么，再选择需要的表和关联键。明确业务口径，先筛选再统计，最后排序。销售额按 quantity × unit_price 计算，不要用商品当前标价替代成交价。先从少量字段运行观察，再逐步组合完整查询。",
+      "example_sql": "SELECT o.status, SUM(i.quantity*i.unit_price) AS sales FROM orders o JOIN order_items i ON o.order_id=i.order_id GROUP BY o.status;",
+      "starter_sql": "",
+      "hints": [
+        "分类经过商品连接明细，再连接订单限定状态，金额别忘乘数量。",
+        "SUM(i.quantity*i.unit_price)，GROUP BY c.category_id,c.category_name"
+      ],
+      "answer_sql": "SELECT c.category_name,ROUND(SUM(i.quantity*i.unit_price),2) AS sales FROM categories c JOIN products p ON c.category_id=p.category_id JOIN order_items i ON p.product_id=i.product_id JOIN orders o ON i.order_id=o.order_id WHERE o.status='completed' GROUP BY c.category_id,c.category_name ORDER BY sales DESC,c.category_name ASC",
+      "wrong_sql": "SELECT c.category_name,ROUND(SUM(i.unit_price),2) AS sales FROM categories c JOIN products p ON c.category_id=p.category_id JOIN order_items i ON p.product_id=i.product_id JOIN orders o ON i.order_id=o.order_id WHERE o.status='completed' GROUP BY c.category_id,c.category_name ORDER BY sales DESC,c.category_name ASC",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": true,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "08-04",
+      "chapter_id": "08",
+      "title": "消费最多的五位客户",
+      "prompt": "只统计 completed 订单，按客户汇总成交金额，输出 customer_id、customer_name、sales（保留 2 位小数），销售额降序，同额客户编号升序，取前 5 位。",
+      "lesson": "先确定每行输出代表什么，再选择需要的表和关联键。明确业务口径，先筛选再统计，最后排序。销售额按 quantity × unit_price 计算，不要用商品当前标价替代成交价。先从少量字段运行观察，再逐步组合完整查询。",
+      "example_sql": "SELECT o.status, SUM(i.quantity*i.unit_price) AS sales FROM orders o JOIN order_items i ON o.order_id=i.order_id GROUP BY o.status;",
+      "starter_sql": "",
+      "hints": [
+        "客户姓名不能唯一标识客户，按客户编号一起分组。",
+        "GROUP BY c.customer_id,c.customer_name ORDER BY sales DESC,c.customer_id ASC LIMIT 5"
+      ],
+      "answer_sql": "SELECT c.customer_id,c.customer_name,ROUND(SUM(i.quantity*i.unit_price),2) AS sales FROM customers c JOIN orders o ON c.customer_id=o.customer_id JOIN order_items i ON o.order_id=i.order_id WHERE o.status='completed' GROUP BY c.customer_id,c.customer_name ORDER BY sales DESC,c.customer_id ASC LIMIT 5",
+      "wrong_sql": "SELECT c.customer_id,c.customer_name,ROUND(SUM(i.quantity*i.unit_price),2) AS sales FROM customers c JOIN orders o ON c.customer_id=o.customer_id JOIN order_items i ON o.order_id=i.order_id WHERE o.status='completed' GROUP BY c.customer_id,c.customer_name ORDER BY sales ASC,c.customer_id ASC LIMIT 5",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": true,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "id": "03",
+  "title": "条件筛选",
+  "subtitle": "从全部数据中找到目标",
+  "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+  "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+  "problems": [
+    {
+      "id": "03-01",
+      "chapter_id": "03",
+      "title": "寻找北京客户",
+      "prompt": "输出北京客户的 customer_id、customer_name、city。",
+      "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+      "starter_sql": "",
+      "hints": [
+        "在客户表上筛选城市字符串。",
+        "WHERE city = '北京'"
+      ],
+      "answer_sql": "SELECT customer_id,customer_name,city FROM customers WHERE city='北京'",
+      "wrong_sql": "SELECT customer_id,customer_name,city FROM customers WHERE city='上海'",
+      "equivalent_sql": [
+        "SELECT customer_id,customer_name,city FROM training.customers WHERE city='北京'"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "03-02",
+      "chapter_id": "03",
+      "title": "筛选高价商品",
+      "prompt": "输出标价严格大于 200 的商品 product_id、product_name、price。",
+      "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+      "starter_sql": "",
+      "hints": [
+        "严格大于不包括恰好等于边界的值。",
+        "WHERE price > 200"
+      ],
+      "answer_sql": "SELECT product_id,product_name,price FROM products WHERE price>200",
+      "wrong_sql": "SELECT product_id,product_name,price FROM products WHERE price<200",
+      "equivalent_sql": [
+        "SELECT product_id,product_name,price FROM training.products WHERE price>200"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "03-03",
+      "chapter_id": "03",
+      "title": "同时满足两个条件",
+      "prompt": "输出数码配件分类（category_id=1）且标价大于 100 的商品，输出全部字段。",
+      "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+      "starter_sql": "",
+      "hints": [
+        "两个条件都要满足，使用 AND。",
+        "WHERE category_id = 1 AND price > 100"
+      ],
+      "answer_sql": "SELECT * FROM products WHERE category_id=1 AND price>100",
+      "wrong_sql": "SELECT * FROM products WHERE category_id=1 OR price>100",
+      "equivalent_sql": [
+        "SELECT * FROM training.products WHERE category_id=1 AND price>100"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "03-04",
+      "chapter_id": "03",
+      "title": "两个城市任意一个",
+      "prompt": "输出上海或北京客户的 customer_id、city；本题要求使用 OR。",
+      "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+      "starter_sql": "",
+      "hints": [
+        "一位客户不能同时属于两个城市，这里要任意一个。",
+        "WHERE city='上海' OR city='北京'"
+      ],
+      "answer_sql": "SELECT customer_id,city FROM customers WHERE city='上海' OR city='北京'",
+      "wrong_sql": "SELECT customer_id,city FROM customers WHERE city='上海' AND city='北京'",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Or"
+      ]
+    },
+    {
+      "id": "03-05",
+      "chapter_id": "03",
+      "title": "使用城市列表",
+      "prompt": "输出杭州、广州、成都客户的 customer_id、city；使用 IN。",
+      "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+      "starter_sql": "",
+      "hints": [
+        "使用集合条件，避免逐个重复写 OR。",
+        "WHERE city IN ('杭州','广州','成都')"
+      ],
+      "answer_sql": "SELECT customer_id,city FROM customers WHERE city IN ('杭州','广州','成都')",
+      "wrong_sql": "SELECT customer_id,city FROM customers WHERE city IN ('上海','北京')",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "In"
+      ]
+    },
+    {
+      "id": "03-06",
+      "chapter_id": "03",
+      "title": "圈定日期区间",
+      "prompt": "查询 2026-03-01 至 2026-03-31（含两端）的订单，输出 order_id、order_date；使用 BETWEEN。",
+      "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+      "starter_sql": "",
+      "hints": [
+        "order_date 是 DATE 字段，边界直接写固定日期。",
+        "WHERE order_date BETWEEN '2026-03-01' AND '2026-03-31'"
+      ],
+      "answer_sql": "SELECT order_id,order_date FROM orders WHERE order_date BETWEEN '2026-03-01' AND '2026-03-31'",
+      "wrong_sql": "SELECT order_id,order_date FROM orders WHERE order_date<'2026-03-01'",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Between"
+      ]
+    },
+    {
+      "id": "03-07",
+      "chapter_id": "03",
+      "title": "名字中含有关键词",
+      "prompt": "输出商品名中包含“笔”的商品 product_id、product_name，使用 LIKE。",
+      "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+      "starter_sql": "",
+      "hints": [
+        "关键词前后可以有其他字符。",
+        "WHERE product_name LIKE '%笔%'"
+      ],
+      "answer_sql": "SELECT product_id,product_name FROM products WHERE product_name LIKE '%笔%'",
+      "wrong_sql": "SELECT product_id,product_name FROM products WHERE product_name='笔'",
+      "equivalent_sql": [
+        "SELECT product_id,product_name FROM training.products WHERE product_name LIKE '%笔%'"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Like"
+      ]
+    },
+    {
+      "id": "03-08",
+      "chapter_id": "03",
+      "title": "找到缺失信息",
+      "prompt": "查询城市缺失的客户，输出 customer_id、customer_name、city。",
+      "lesson": "WHERE 对每一行判断条件。字符串用单引号包围；AND 要求同时满足，OR 满足任一个即可，混用时用括号明确范围。IN 表示属于给定集合，BETWEEN 包含两端。LIKE 中 % 匹配任意长度文本。NULL 表示缺失，必须用 IS NULL 判断，不能写 = NULL。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price >= 100;",
+      "starter_sql": "",
+      "hints": [
+        "NULL 是缺失信息，不能用等号比较。",
+        "WHERE city IS NULL"
+      ],
+      "answer_sql": "SELECT customer_id,customer_name,city FROM customers WHERE city IS NULL",
+      "wrong_sql": "SELECT customer_id,customer_name,city FROM customers WHERE city=NULL",
+      "equivalent_sql": [
+        "SELECT customer_id,customer_name,city FROM training.customers WHERE city IS NULL"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    }
+  ]
+}

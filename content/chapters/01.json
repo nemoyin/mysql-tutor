@@ -1,0 +1,78 @@
+{
+  "id": "01",
+  "title": "认识数据库",
+  "subtitle": "先认识表，再写第一条查询",
+  "lesson": "数据库像一个有组织的资料库。表是一类数据的集合，每行是一条记录，每列是一个字段。主键唯一标识一条记录，客户同名时仍要靠 customer_id 区分。SELECT 选择要看的字段，FROM 指定从哪张表读取。星号 * 表示全部字段。右侧可查看表结构和样例数据。",
+  "example_sql": "SELECT * FROM categories;",
+  "problems": [
+    {
+      "id": "01-01",
+      "chapter_id": "01",
+      "title": "第一次认识客户",
+      "prompt": "查询 customers 表的所有字段和全部客户。",
+      "lesson": "数据库像一个有组织的资料库。表是一类数据的集合，每行是一条记录，每列是一个字段。主键唯一标识一条记录，客户同名时仍要靠 customer_id 区分。SELECT 选择要看的字段，FROM 指定从哪张表读取。星号 * 表示全部字段。右侧可查看表结构和样例数据。",
+      "example_sql": "SELECT * FROM categories;",
+      "starter_sql": "",
+      "hints": [
+        "需要完整的客户表，而不仅是右侧样例的前 10 行。",
+        "SELECT * FROM 表名;"
+      ],
+      "answer_sql": "SELECT * FROM customers",
+      "wrong_sql": "SELECT * FROM customers LIMIT 10",
+      "equivalent_sql": [
+        "SELECT * FROM training.customers"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "01-02",
+      "chapter_id": "01",
+      "title": "浏览商品目录",
+      "prompt": "查询 products 表的全部商品和所有字段。",
+      "lesson": "数据库像一个有组织的资料库。表是一类数据的集合，每行是一条记录，每列是一个字段。主键唯一标识一条记录，客户同名时仍要靠 customer_id 区分。SELECT 选择要看的字段，FROM 指定从哪张表读取。星号 * 表示全部字段。右侧可查看表结构和样例数据。",
+      "example_sql": "SELECT * FROM categories;",
+      "starter_sql": "",
+      "hints": [
+        "先在数据参考中找到“商品”对应的英文表名。",
+        "SELECT * FROM products;"
+      ],
+      "answer_sql": "SELECT * FROM products",
+      "wrong_sql": "SELECT * FROM categories",
+      "equivalent_sql": [
+        "SELECT * FROM training.products"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "01-03",
+      "chapter_id": "01",
+      "title": "找到客户的身份",
+      "prompt": "只查询全部客户的 customer_id、customer_name，按此顺序输出。",
+      "lesson": "数据库像一个有组织的资料库。表是一类数据的集合，每行是一条记录，每列是一个字段。主键唯一标识一条记录，客户同名时仍要靠 customer_id 区分。SELECT 选择要看的字段，FROM 指定从哪张表读取。星号 * 表示全部字段。右侧可查看表结构和样例数据。",
+      "example_sql": "SELECT * FROM categories;",
+      "starter_sql": "",
+      "hints": [
+        "在 SELECT 后列出两个字段，用逗号分开。",
+        "SELECT 字段1, 字段2 FROM 表名;"
+      ],
+      "answer_sql": "SELECT customer_id, customer_name FROM customers",
+      "wrong_sql": "SELECT customer_name FROM customers",
+      "equivalent_sql": [
+        "SELECT customer_id, customer_name FROM training.customers"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    }
+  ]
+}

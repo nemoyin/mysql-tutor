@@ -1,0 +1,10 @@
+import {useEffect,useState} from 'react';
+import {Database,Table2,KeyRound,ChevronDown,Link2} from 'lucide-react';
+import {api} from '../api/client';
+import ResultTable from './ResultTable';
+export default function SchemaPanel(){
+ const [tables,setTables]=useState<any[]>([]),[open,setOpen]=useState('customers'),[sample,setSample]=useState<any>(null),[error,setError]=useState('');
+ useEffect(()=>{api('/catalog').then(setTables).catch(e=>setError(e.message))},[]);
+ async function showSample(name:string){try{setSample({name,result:await api(`/catalog/${name}/sample`)})}catch(e:any){setError(e.message)}}
+ return <aside className="schema-panel"><div className="panel-title"><Database size={16}/> 数据参考<span className="tiny-badge">5 张表</span></div><div className="schema-db"><span className="success-dot"/>training <span>电商订单数据</span></div>{error&&<p className="error-text">{error}</p>}{tables.map(t=><section className="schema-table" key={t.name}><button className="schema-toggle" onClick={()=>setOpen(open===t.name?'':t.name)}><Table2 size={15}/><span><b>{t.name}</b><small>{t.label}</small></span><ChevronDown size={14} className={open===t.name?'rotate':''}/></button>{open===t.name&&<div className="schema-fields"><p>{t.description}</p>{t.columns.map((c:any)=><div className="field" key={c.name}><span>{c.description.includes('主键')?<KeyRound size={12}/>:<span className="field-dot"/>}<code>{c.name}</code></span><small>{c.mysql_type}</small><div>{c.description}</div></div>)}{t.relations.map((r:any)=><p className="relation" key={r.column}><Link2 size={12}/>{r.column} → {r.target_table}.{r.target_column}</p>)}<button className="text-button" onClick={()=>showSample(t.name)}>查看前 10 行数据 →</button></div>}</section>)}<div className="schema-tip"><b>小提示</b><p>点击表名展开字段。查询结果不会修改这里的数据，可以放心尝试。</p></div>{sample&&<div className="modal-backdrop"><div className="modal wide"><div className="modal-head"><h3>{sample.name} · 样例数据</h3><button onClick={()=>setSample(null)}>关闭</button></div><ResultTable result={sample.result}/></div></div>}</aside>
+}

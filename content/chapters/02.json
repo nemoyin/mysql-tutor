@@ -1,0 +1,122 @@
+{
+  "id": "02",
+  "title": "基础查询",
+  "subtitle": "选择字段，让结果更清晰",
+  "lesson": "SELECT 后可以列出多个字段，输出列顺序与这里一致。AS 为输出列设置易读的别名，不会修改原表。DISTINCT 对所选字段的整行组合去重。字段也能参与计算：数量乘成交单价得到明细金额。",
+  "example_sql": "SELECT product_name AS 商品, price AS 标价 FROM products;",
+  "problems": [
+    {
+      "id": "02-01",
+      "chapter_id": "02",
+      "title": "精简商品清单",
+      "prompt": "只输出 product_name、price 两列，查询全部商品。",
+      "lesson": "SELECT 后可以列出多个字段，输出列顺序与这里一致。AS 为输出列设置易读的别名，不会修改原表。DISTINCT 对所选字段的整行组合去重。字段也能参与计算：数量乘成交单价得到明细金额。",
+      "example_sql": "SELECT product_name AS 商品, price AS 标价 FROM products;",
+      "starter_sql": "",
+      "hints": [
+        "不需要星号，只列出商品名称与标价。",
+        "SELECT product_name, price FROM products;"
+      ],
+      "answer_sql": "SELECT product_name,price FROM products",
+      "wrong_sql": "SELECT * FROM products",
+      "equivalent_sql": [
+        "SELECT product_name,price FROM training.products"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "02-02",
+      "chapter_id": "02",
+      "title": "给列起中文名字",
+      "prompt": "查询客户姓名和城市，输出别名必须依次为“客户”“城市”。",
+      "lesson": "SELECT 后可以列出多个字段，输出列顺序与这里一致。AS 为输出列设置易读的别名，不会修改原表。DISTINCT 对所选字段的整行组合去重。字段也能参与计算：数量乘成交单价得到明细金额。",
+      "example_sql": "SELECT product_name AS 商品, price AS 标价 FROM products;",
+      "starter_sql": "",
+      "hints": [
+        "AS 设置的是结果列名，中文别名可以用反引号包围。",
+        "SELECT 字段 AS 别名, 字段 AS 别名 FROM customers;"
+      ],
+      "answer_sql": "SELECT customer_name AS 客户,city AS 城市 FROM customers",
+      "wrong_sql": "SELECT customer_name,city FROM customers",
+      "equivalent_sql": [
+        "SELECT customer_name AS 客户,city AS 城市 FROM training.customers"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": true,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "02-03",
+      "chapter_id": "02",
+      "title": "客户来自哪些城市",
+      "prompt": "只输出 city 一列，列出所有不同的城市，包括一条 NULL。使用 DISTINCT。",
+      "lesson": "SELECT 后可以列出多个字段，输出列顺序与这里一致。AS 为输出列设置易读的别名，不会修改原表。DISTINCT 对所选字段的整行组合去重。字段也能参与计算：数量乘成交单价得到明细金额。",
+      "example_sql": "SELECT product_name AS 商品, price AS 标价 FROM products;",
+      "starter_sql": "",
+      "hints": [
+        "多个客户来自同一城市，城市列表需要去重。",
+        "SELECT DISTINCT city FROM customers;"
+      ],
+      "answer_sql": "SELECT DISTINCT city FROM customers",
+      "wrong_sql": "SELECT city FROM customers",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Distinct"
+      ]
+    },
+    {
+      "id": "02-04",
+      "chapter_id": "02",
+      "title": "算一算明细金额",
+      "prompt": "查询全部明细，依次输出 item_id、quantity * unit_price 的结果，金额列别名为 line_amount。",
+      "lesson": "SELECT 后可以列出多个字段，输出列顺序与这里一致。AS 为输出列设置易读的别名，不会修改原表。DISTINCT 对所选字段的整行组合去重。字段也能参与计算：数量乘成交单价得到明细金额。",
+      "example_sql": "SELECT product_name AS 商品, price AS 标价 FROM products;",
+      "starter_sql": "",
+      "hints": [
+        "成交单价不是整条明细的金额，还要乘数量。",
+        "SELECT item_id, quantity * unit_price AS line_amount FROM order_items;"
+      ],
+      "answer_sql": "SELECT item_id,quantity*unit_price AS line_amount FROM order_items",
+      "wrong_sql": "SELECT item_id,unit_price AS line_amount FROM order_items",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": true,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "02-05",
+      "chapter_id": "02",
+      "title": "同城同名也要区分",
+      "prompt": "输出全部客户的 customer_id、customer_name、city 三列。不要按姓名去重。",
+      "lesson": "SELECT 后可以列出多个字段，输出列顺序与这里一致。AS 为输出列设置易读的别名，不会修改原表。DISTINCT 对所选字段的整行组合去重。字段也能参与计算：数量乘成交单价得到明细金额。",
+      "example_sql": "SELECT product_name AS 商品, price AS 标价 FROM products;",
+      "starter_sql": "",
+      "hints": [
+        "客户编号是身份标识，姓名可能相同。",
+        "SELECT customer_id, customer_name, city FROM customers;"
+      ],
+      "answer_sql": "SELECT customer_id,customer_name,city FROM customers",
+      "wrong_sql": "SELECT DISTINCT customer_name,city FROM customers",
+      "equivalent_sql": [
+        "SELECT customer_id,customer_name,city FROM training.customers"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    }
+  ]
+}

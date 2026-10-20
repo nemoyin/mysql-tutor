@@ -1,0 +1,105 @@
+{
+  "id": "07",
+  "title": "查询进阶",
+  "subtitle": "把一个查询作为另一个查询的条件",
+  "lesson": "子查询可以先算出一个值或集合，再供外层查询使用。平均价格等单值结果可放在比较条件中，IN 接受一列结果集合。CASE WHEN 按条件生成新列。NOT IN 遇到 NULL 会影响判断，因此应先确认子查询列是否允许为空。",
+  "example_sql": "SELECT product_name, price FROM products WHERE price > (SELECT AVG(price) FROM products);",
+  "problems": [
+    {
+      "id": "07-01",
+      "chapter_id": "07",
+      "title": "高于平均价的商品",
+      "prompt": "使用子查询，输出高于全部商品平均标价的 product_id、price。",
+      "lesson": "子查询可以先算出一个值或集合，再供外层查询使用。平均价格等单值结果可放在比较条件中，IN 接受一列结果集合。CASE WHEN 按条件生成新列。NOT IN 遇到 NULL 会影响判断，因此应先确认子查询列是否允许为空。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price > (SELECT AVG(price) FROM products);",
+      "starter_sql": "",
+      "hints": [
+        "内层查询只返回一个平均值。",
+        "WHERE price > (SELECT AVG(price) FROM products)"
+      ],
+      "answer_sql": "SELECT product_id,price FROM products WHERE price>(SELECT AVG(price) FROM products)",
+      "wrong_sql": "SELECT product_id,price FROM products WHERE price<(SELECT AVG(price) FROM products)",
+      "equivalent_sql": [
+        "SELECT product_id,price FROM training.products WHERE price>(SELECT AVG(price) FROM training.products)"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Subquery"
+      ]
+    },
+    {
+      "id": "07-02",
+      "chapter_id": "07",
+      "title": "有已完成订单的客户",
+      "prompt": "使用 IN 子查询，输出至少有一笔 completed 订单的客户 customer_id、customer_name，每个客户只输出一次。",
+      "lesson": "子查询可以先算出一个值或集合，再供外层查询使用。平均价格等单值结果可放在比较条件中，IN 接受一列结果集合。CASE WHEN 按条件生成新列。NOT IN 遇到 NULL 会影响判断，因此应先确认子查询列是否允许为空。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price > (SELECT AVG(price) FROM products);",
+      "starter_sql": "",
+      "hints": [
+        "子查询先找到已完成订单的客户编号集合。",
+        "WHERE customer_id IN (SELECT customer_id FROM orders WHERE status='completed')"
+      ],
+      "answer_sql": "SELECT customer_id,customer_name FROM customers WHERE customer_id IN (SELECT customer_id FROM orders WHERE status='completed')",
+      "wrong_sql": "SELECT customer_id,customer_name FROM customers WHERE customer_id IN (SELECT customer_id FROM orders WHERE status='pending')",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "In"
+      ]
+    },
+    {
+      "id": "07-03",
+      "chapter_id": "07",
+      "title": "给商品划分价格档位",
+      "prompt": "输出 product_id 和 price_level：price>=200 为“高价”，其他为“常规”。使用 CASE WHEN。",
+      "lesson": "子查询可以先算出一个值或集合，再供外层查询使用。平均价格等单值结果可放在比较条件中，IN 接受一列结果集合。CASE WHEN 按条件生成新列。NOT IN 遇到 NULL 会影响判断，因此应先确认子查询列是否允许为空。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price > (SELECT AVG(price) FROM products);",
+      "starter_sql": "",
+      "hints": [
+        "CASE 只生成结果列，不会修改原表。",
+        "CASE WHEN price>=200 THEN '高价' ELSE '常规' END AS price_level"
+      ],
+      "answer_sql": "SELECT product_id,CASE WHEN price>=200 THEN '高价' ELSE '常规' END AS price_level FROM products",
+      "wrong_sql": "SELECT product_id,CASE WHEN price<200 THEN '高价' ELSE '常规' END AS price_level FROM products",
+      "equivalent_sql": [
+        "SELECT product_id,CASE WHEN price>=200 THEN '高价' ELSE '常规' END AS price_level FROM training.products"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Case"
+      ]
+    },
+    {
+      "id": "07-04",
+      "chapter_id": "07",
+      "title": "换一种方式找未下单客户",
+      "prompt": "使用 NOT IN 子查询，输出未下单的 customer_id、customer_name。orders.customer_id 不允许为 NULL。",
+      "lesson": "子查询可以先算出一个值或集合，再供外层查询使用。平均价格等单值结果可放在比较条件中，IN 接受一列结果集合。CASE WHEN 按条件生成新列。NOT IN 遇到 NULL 会影响判断，因此应先确认子查询列是否允许为空。",
+      "example_sql": "SELECT product_name, price FROM products WHERE price > (SELECT AVG(price) FROM products);",
+      "starter_sql": "",
+      "hints": [
+        "本题外层保留不在订单客户编号集合中的客户。",
+        "WHERE customer_id NOT IN (SELECT customer_id FROM orders)"
+      ],
+      "answer_sql": "SELECT customer_id,customer_name FROM customers WHERE customer_id NOT IN (SELECT customer_id FROM orders)",
+      "wrong_sql": "SELECT customer_id,customer_name FROM customers WHERE customer_id IN (SELECT customer_id FROM orders)",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "In"
+      ]
+    }
+  ]
+}

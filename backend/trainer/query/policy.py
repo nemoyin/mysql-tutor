@@ -7,7 +7,8 @@ TABLES = {'customers', 'categories', 'products', 'orders', 'order_items'}
 FUNCTIONS = {'COUNT','SUM','AVG','MAX','MIN','ROUND','ABS','COALESCE','IFNULL','NULLIF',
              'CONCAT','CONCAT_WS','LOWER','UPPER','LENGTH','CHAR_LENGTH','SUBSTRING','TRIM',
              'DATE','DATE_FORMAT','YEAR','MONTH','DAY','DAYOFMONTH','DATEDIFF','CAST',
-             'CASE','IF','CEIL','CEILING','FLOOR','ISNULL'}
+             'CASE','IF','CEIL','CEILING','FLOOR','ISNULL',
+             'AND','OR','NOT','TIME_TO_STR','TS_OR_DS_TO_TIMESTAMP'}
 
 
 @dataclass

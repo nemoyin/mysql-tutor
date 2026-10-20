@@ -1,0 +1,145 @@
+{
+  "id": "05",
+  "title": "分组统计",
+  "subtitle": "从一条条记录中看整体",
+  "lesson": "COUNT(*) 计算行数，COUNT(字段) 不统计 NULL。SUM 求和，AVG 求平均，MIN/MAX 求最小值与最大值。GROUP BY 把相同分组键的行放在一起，每组输出一行。WHERE 在分组前筛行，HAVING 在分组后筛组。非聚合输出字段应符合分组规则。",
+  "example_sql": "SELECT category_id, COUNT(*) AS product_count FROM products GROUP BY category_id;",
+  "problems": [
+    {
+      "id": "05-01",
+      "chapter_id": "05",
+      "title": "一共有多少客户",
+      "prompt": "统计客户总人数，输出一列 customer_count。",
+      "lesson": "COUNT(*) 计算行数，COUNT(字段) 不统计 NULL。SUM 求和，AVG 求平均，MIN/MAX 求最小值与最大值。GROUP BY 把相同分组键的行放在一起，每组输出一行。WHERE 在分组前筛行，HAVING 在分组后筛组。非聚合输出字段应符合分组规则。",
+      "example_sql": "SELECT category_id, COUNT(*) AS product_count FROM products GROUP BY category_id;",
+      "starter_sql": "",
+      "hints": [
+        "城市缺失的客户也要计入总人数。",
+        "SELECT COUNT(*) AS customer_count FROM customers;"
+      ],
+      "answer_sql": "SELECT COUNT(*) AS customer_count FROM customers",
+      "wrong_sql": "SELECT COUNT(city) AS customer_count FROM customers",
+      "equivalent_sql": [
+        "SELECT COUNT(*) AS customer_count FROM training.customers"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "05-02",
+      "chapter_id": "05",
+      "title": "一共卖出了多少件",
+      "prompt": "统计全部订单明细的数量之和，包含所有状态订单，输出 total_quantity。",
+      "lesson": "COUNT(*) 计算行数，COUNT(字段) 不统计 NULL。SUM 求和，AVG 求平均，MIN/MAX 求最小值与最大值。GROUP BY 把相同分组键的行放在一起，每组输出一行。WHERE 在分组前筛行，HAVING 在分组后筛组。非聚合输出字段应符合分组规则。",
+      "example_sql": "SELECT category_id, COUNT(*) AS product_count FROM products GROUP BY category_id;",
+      "starter_sql": "",
+      "hints": [
+        "明细行数不等于商品件数。",
+        "SELECT SUM(quantity) AS total_quantity FROM order_items;"
+      ],
+      "answer_sql": "SELECT SUM(quantity) AS total_quantity FROM order_items",
+      "wrong_sql": "SELECT COUNT(*) AS total_quantity FROM order_items",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "05-03",
+      "chapter_id": "05",
+      "title": "平均标价",
+      "prompt": "计算所有商品平均标价，用 ROUND 保留 2 位小数，输出 avg_price。",
+      "lesson": "COUNT(*) 计算行数，COUNT(字段) 不统计 NULL。SUM 求和，AVG 求平均，MIN/MAX 求最小值与最大值。GROUP BY 把相同分组键的行放在一起，每组输出一行。WHERE 在分组前筛行，HAVING 在分组后筛组。非聚合输出字段应符合分组规则。",
+      "example_sql": "SELECT category_id, COUNT(*) AS product_count FROM products GROUP BY category_id;",
+      "starter_sql": "",
+      "hints": [
+        "先求平均，再对结果保留两位小数。",
+        "ROUND(AVG(price), 2)"
+      ],
+      "answer_sql": "SELECT ROUND(AVG(price),2) AS avg_price FROM products",
+      "wrong_sql": "SELECT SUM(price) AS avg_price FROM products",
+      "equivalent_sql": [
+        "SELECT ROUND(AVG(price),2) AS avg_price FROM training.products"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "05-04",
+      "chapter_id": "05",
+      "title": "价格范围",
+      "prompt": "输出最低和最高商品标价，依次命名 min_price、max_price。",
+      "lesson": "COUNT(*) 计算行数，COUNT(字段) 不统计 NULL。SUM 求和，AVG 求平均，MIN/MAX 求最小值与最大值。GROUP BY 把相同分组键的行放在一起，每组输出一行。WHERE 在分组前筛行，HAVING 在分组后筛组。非聚合输出字段应符合分组规则。",
+      "example_sql": "SELECT category_id, COUNT(*) AS product_count FROM products GROUP BY category_id;",
+      "starter_sql": "",
+      "hints": [
+        "两个聚合可以写在同一个 SELECT 中。",
+        "SELECT MIN(price) AS min_price, MAX(price) AS max_price FROM products;"
+      ],
+      "answer_sql": "SELECT MIN(price) AS min_price,MAX(price) AS max_price FROM products",
+      "wrong_sql": "SELECT MAX(price) AS min_price,MIN(price) AS max_price FROM products",
+      "equivalent_sql": [
+        "SELECT MIN(price) AS min_price,MAX(price) AS max_price FROM training.products"
+      ],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": []
+    },
+    {
+      "id": "05-05",
+      "chapter_id": "05",
+      "title": "各城市的客户数",
+      "prompt": "按 city 分组，依次输出 city、COUNT(*) AS customer_count，包含 NULL 分组，不要求排序。",
+      "lesson": "COUNT(*) 计算行数，COUNT(字段) 不统计 NULL。SUM 求和，AVG 求平均，MIN/MAX 求最小值与最大值。GROUP BY 把相同分组键的行放在一起，每组输出一行。WHERE 在分组前筛行，HAVING 在分组后筛组。非聚合输出字段应符合分组规则。",
+      "example_sql": "SELECT category_id, COUNT(*) AS product_count FROM products GROUP BY category_id;",
+      "starter_sql": "",
+      "hints": [
+        "NULL 城市也形成一个分组，统计该组人数用 COUNT(*)。",
+        "SELECT city, COUNT(*) AS customer_count FROM customers GROUP BY city;"
+      ],
+      "answer_sql": "SELECT city,COUNT(*) AS customer_count FROM customers GROUP BY city",
+      "wrong_sql": "SELECT city,COUNT(city) AS customer_count FROM customers GROUP BY city",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Group"
+      ]
+    },
+    {
+      "id": "05-06",
+      "chapter_id": "05",
+      "title": "订单至少五笔的客户",
+      "prompt": "按 customer_id 统计订单，包含全部订单状态，仅保留订单数至少 5 的客户；输出 customer_id、order_count，不要求排序。",
+      "lesson": "COUNT(*) 计算行数，COUNT(字段) 不统计 NULL。SUM 求和，AVG 求平均，MIN/MAX 求最小值与最大值。GROUP BY 把相同分组键的行放在一起，每组输出一行。WHERE 在分组前筛行，HAVING 在分组后筛组。非聚合输出字段应符合分组规则。",
+      "example_sql": "SELECT category_id, COUNT(*) AS product_count FROM products GROUP BY category_id;",
+      "starter_sql": "",
+      "hints": [
+        "对聚合结果筛选应写在 HAVING 中。",
+        "GROUP BY customer_id HAVING COUNT(*) >= 5"
+      ],
+      "answer_sql": "SELECT customer_id,COUNT(*) AS order_count FROM orders GROUP BY customer_id HAVING COUNT(*)>=5",
+      "wrong_sql": "SELECT customer_id,COUNT(*) AS order_count FROM orders GROUP BY customer_id HAVING COUNT(*)>5",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Having"
+      ]
+    }
+  ]
+}

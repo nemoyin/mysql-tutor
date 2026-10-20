@@ -1,0 +1,32 @@
+import {test,expect} from '@playwright/test';
+import path from 'node:path';
+
+test('learner can run without submitting, complete a problem and recover progress',async({page})=>{
+ await page.goto('/');
+ await expect(page.locator('.welcome-form,.app-sidebar').first()).toBeVisible();
+ if(await page.locator('.profile-button').isVisible())await page.locator('.profile-button').click();
+ await expect(page.getByText('开始你的数据探索')).toBeVisible();
+ await page.getByLabel('姓名或昵称').fill('验收学员'+Date.now());
+ await page.getByRole('button',{name:'创建档案，开始学习'}).click();
+ await expect(page.getByRole('heading',{name:/让每一次查询/})).toBeVisible();
+ await page.getByRole('button',{name:'开始学习',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'第一次认识客户',exact:true})).toBeVisible();
+ const editor=page.locator('.cm-content');
+ await editor.click();await page.keyboard.type('SELECT * FROM customers;');
+ await page.getByRole('button',{name:'运行 SQL',exact:true}).click();
+ await expect(page.getByText('执行成功 · 30 行')).toBeVisible();
+ await expect(page.getByText('✓ 回答正确')).toHaveCount(0);
+ await page.getByRole('button',{name:'提交判题',exact:true}).click();
+ await expect(page.getByText('✓ 回答正确')).toBeVisible();
+ await page.reload();
+ await page.screenshot({path:path.resolve(__dirname,'../../docs/screenshots/home.png'),fullPage:true});
+ await page.getByRole('button',{name:/课程学习/}).click();
+ await expect(editor).toContainText('SELECT * FROM customers;');
+ await expect(page.locator('.lesson-dot.done')).toHaveCount(1);
+ await page.screenshot({path:path.resolve(__dirname,'../../docs/screenshots/workspace.png'),fullPage:true});
+ await page.getByRole('button',{name:'自由实验室',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'自由实验室',exact:true})).toBeVisible();
+ await editor.click();await page.keyboard.type('SELECT product_name, price FROM products LIMIT 3;');
+ await page.getByRole('button',{name:'运行 SQL',exact:true}).click();
+ await expect(page.getByText('执行成功 · 3 行')).toBeVisible();
+});

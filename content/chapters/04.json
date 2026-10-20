@@ -1,0 +1,106 @@
+{
+  "id": "04",
+  "title": "排序与截取",
+  "subtitle": "让结果按需要排列",
+  "lesson": "ORDER BY ASC 为升序，DESC 为降序，默认是升序。多个排序字段按先后逐层比较。LIMIT 限制返回行数。取前 N 条时要先排序，并使用唯一编号作为并列时的第二排序字段，确保结果稳定。",
+  "example_sql": "SELECT product_id, product_name, price FROM products ORDER BY price DESC, product_id ASC LIMIT 3;",
+  "problems": [
+    {
+      "id": "04-01",
+      "chapter_id": "04",
+      "title": "按注册时间排队",
+      "prompt": "输出 customer_id、registered_at，按注册日期升序，日期相同再按客户编号升序。",
+      "lesson": "ORDER BY ASC 为升序，DESC 为降序，默认是升序。多个排序字段按先后逐层比较。LIMIT 限制返回行数。取前 N 条时要先排序，并使用唯一编号作为并列时的第二排序字段，确保结果稳定。",
+      "example_sql": "SELECT product_id, product_name, price FROM products ORDER BY price DESC, product_id ASC LIMIT 3;",
+      "starter_sql": "",
+      "hints": [
+        "先写日期排序，再写唯一编号。",
+        "ORDER BY registered_at ASC, customer_id ASC"
+      ],
+      "answer_sql": "SELECT customer_id,registered_at FROM customers ORDER BY registered_at,customer_id",
+      "wrong_sql": "SELECT customer_id,registered_at FROM customers ORDER BY registered_at DESC,customer_id",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": true,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Order"
+      ]
+    },
+    {
+      "id": "04-02",
+      "chapter_id": "04",
+      "title": "最贵的商品在前",
+      "prompt": "输出 product_id、price，按价格降序，同价按商品编号升序。",
+      "lesson": "ORDER BY ASC 为升序，DESC 为降序，默认是升序。多个排序字段按先后逐层比较。LIMIT 限制返回行数。取前 N 条时要先排序，并使用唯一编号作为并列时的第二排序字段，确保结果稳定。",
+      "example_sql": "SELECT product_id, product_name, price FROM products ORDER BY price DESC, product_id ASC LIMIT 3;",
+      "starter_sql": "",
+      "hints": [
+        "降序使用 DESC。",
+        "ORDER BY price DESC, product_id ASC"
+      ],
+      "answer_sql": "SELECT product_id,price FROM products ORDER BY price DESC,product_id",
+      "wrong_sql": "SELECT product_id,price FROM products ORDER BY price,product_id",
+      "equivalent_sql": [
+        "SELECT product_id,price FROM training.products ORDER BY price DESC,product_id"
+      ],
+      "output_columns": [],
+      "compare_order": true,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Order"
+      ]
+    },
+    {
+      "id": "04-03",
+      "chapter_id": "04",
+      "title": "订单按状态和时间排列",
+      "prompt": "输出 order_id、status、order_date，先按 status 升序，再按日期降序，最后订单编号升序。",
+      "lesson": "ORDER BY ASC 为升序，DESC 为降序，默认是升序。多个排序字段按先后逐层比较。LIMIT 限制返回行数。取前 N 条时要先排序，并使用唯一编号作为并列时的第二排序字段，确保结果稳定。",
+      "example_sql": "SELECT product_id, product_name, price FROM products ORDER BY price DESC, product_id ASC LIMIT 3;",
+      "starter_sql": "",
+      "hints": [
+        "同一状态内按较新的日期在前。",
+        "ORDER BY status ASC, order_date DESC, order_id ASC"
+      ],
+      "answer_sql": "SELECT order_id,status,order_date FROM orders ORDER BY status ASC,order_date DESC,order_id ASC",
+      "wrong_sql": "SELECT order_id,status,order_date FROM orders ORDER BY order_id",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": true,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Order"
+      ]
+    },
+    {
+      "id": "04-04",
+      "chapter_id": "04",
+      "title": "找到前十件高价商品",
+      "prompt": "输出 product_id、product_name、price，价格降序，同价商品编号升序，仅取前 10 件。",
+      "lesson": "ORDER BY ASC 为升序，DESC 为降序，默认是升序。多个排序字段按先后逐层比较。LIMIT 限制返回行数。取前 N 条时要先排序，并使用唯一编号作为并列时的第二排序字段，确保结果稳定。",
+      "example_sql": "SELECT product_id, product_name, price FROM products ORDER BY price DESC, product_id ASC LIMIT 3;",
+      "starter_sql": "",
+      "hints": [
+        "LIMIT 放在排序之后。",
+        "ORDER BY price DESC, product_id ASC LIMIT 10"
+      ],
+      "answer_sql": "SELECT product_id,product_name,price FROM products ORDER BY price DESC,product_id LIMIT 10",
+      "wrong_sql": "SELECT product_id,product_name,price FROM products ORDER BY price,product_id LIMIT 10",
+      "equivalent_sql": [
+        "SELECT product_id,product_name,price FROM training.products ORDER BY price DESC,product_id LIMIT 10"
+      ],
+      "output_columns": [],
+      "compare_order": true,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Order",
+        "Limit"
+      ]
+    }
+  ]
+}

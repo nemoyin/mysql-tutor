@@ -6,6 +6,8 @@ import pytest
     "/*练习*/ SELECT customer_name FROM customers WHERE city='上;海';",
     'SELECT * FROM customers WHERE customer_id IN (SELECT customer_id FROM orders)',
     'SELECT COUNT(*), ROUND(AVG(price),2) FROM products',
+    'SELECT * FROM products WHERE category_id=1 AND price>100',
+    "SELECT DATE_FORMAT(order_date,'%Y-%m') FROM orders",
 ])
 def test_allows_teaching_queries(sql):
     from trainer.query.policy import validate_query

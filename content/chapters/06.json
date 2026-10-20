@@ -1,0 +1,147 @@
+{
+  "id": "06",
+  "title": "多表关联",
+  "subtitle": "把分散的数据连接起来",
+  "lesson": "JOIN 根据关联键把两张表组合。INNER JOIN 只保留两侧匹配的记录，LEFT JOIN 保留左表全部记录，右侧没有匹配时为 NULL。关联一对多数据会增加行数，这通常是正常现象。用表别名明确同名字段，并用主外键关联，不要用姓名关联。",
+  "example_sql": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id LIMIT 5;",
+  "problems": [
+    {
+      "id": "06-01",
+      "chapter_id": "06",
+      "title": "给订单补上客户姓名",
+      "prompt": "查询全部订单，依次输出 order_id、customer_name，使用 JOIN。",
+      "lesson": "JOIN 根据关联键把两张表组合。INNER JOIN 只保留两侧匹配的记录，LEFT JOIN 保留左表全部记录，右侧没有匹配时为 NULL。关联一对多数据会增加行数，这通常是正常现象。用表别名明确同名字段，并用主外键关联，不要用姓名关联。",
+      "example_sql": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id LIMIT 5;",
+      "starter_sql": "",
+      "hints": [
+        "订单的 customer_id 指向客户编号。",
+        "JOIN customers c ON o.customer_id = c.customer_id"
+      ],
+      "answer_sql": "SELECT o.order_id,c.customer_name FROM orders o JOIN customers c ON o.customer_id=c.customer_id",
+      "wrong_sql": "SELECT o.order_id,c.customer_name FROM orders o JOIN customers c ON o.order_id=c.customer_id",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Join"
+      ]
+    },
+    {
+      "id": "06-02",
+      "chapter_id": "06",
+      "title": "商品属于哪个分类",
+      "prompt": "查询所有商品，依次输出 product_id、product_name、category_name。",
+      "lesson": "JOIN 根据关联键把两张表组合。INNER JOIN 只保留两侧匹配的记录，LEFT JOIN 保留左表全部记录，右侧没有匹配时为 NULL。关联一对多数据会增加行数，这通常是正常现象。用表别名明确同名字段，并用主外键关联，不要用姓名关联。",
+      "example_sql": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id LIMIT 5;",
+      "starter_sql": "",
+      "hints": [
+        "分类键是 category_id。",
+        "JOIN categories c ON p.category_id = c.category_id"
+      ],
+      "answer_sql": "SELECT p.product_id,p.product_name,c.category_name FROM products p JOIN categories c ON p.category_id=c.category_id",
+      "wrong_sql": "SELECT p.product_id,p.product_name,c.category_name FROM products p JOIN categories c ON p.product_id=c.category_id",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Join"
+      ]
+    },
+    {
+      "id": "06-03",
+      "chapter_id": "06",
+      "title": "展开订单明细",
+      "prompt": "关联 orders、order_items、products，依次输出 order_id、item_id、product_name、quantity，包含所有订单状态。",
+      "lesson": "JOIN 根据关联键把两张表组合。INNER JOIN 只保留两侧匹配的记录，LEFT JOIN 保留左表全部记录，右侧没有匹配时为 NULL。关联一对多数据会增加行数，这通常是正常现象。用表别名明确同名字段，并用主外键关联，不要用姓名关联。",
+      "example_sql": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id LIMIT 5;",
+      "starter_sql": "",
+      "hints": [
+        "先连接订单与明细，再按商品编号连接商品。",
+        "orders o JOIN order_items i ON o.order_id=i.order_id JOIN products p ON i.product_id=p.product_id"
+      ],
+      "answer_sql": "SELECT o.order_id,i.item_id,p.product_name,i.quantity FROM orders o JOIN order_items i ON o.order_id=i.order_id JOIN products p ON i.product_id=p.product_id",
+      "wrong_sql": "SELECT o.order_id,i.item_id,p.product_name,i.quantity FROM orders o JOIN order_items i ON o.order_id=i.order_id JOIN products p ON i.item_id=p.product_id",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Join"
+      ]
+    },
+    {
+      "id": "06-04",
+      "chapter_id": "06",
+      "title": "保留没有下单的客户",
+      "prompt": "使用 LEFT JOIN 输出全部客户的 customer_id 和匹配的 order_id。未下单客户的 order_id 应为 NULL。",
+      "lesson": "JOIN 根据关联键把两张表组合。INNER JOIN 只保留两侧匹配的记录，LEFT JOIN 保留左表全部记录，右侧没有匹配时为 NULL。关联一对多数据会增加行数，这通常是正常现象。用表别名明确同名字段，并用主外键关联，不要用姓名关联。",
+      "example_sql": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id LIMIT 5;",
+      "starter_sql": "",
+      "hints": [
+        "客户放左侧，才能保留没有订单的客户。",
+        "customers c LEFT JOIN orders o ON c.customer_id=o.customer_id"
+      ],
+      "answer_sql": "SELECT c.customer_id,o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id",
+      "wrong_sql": "SELECT c.customer_id,o.order_id FROM customers c JOIN orders o ON c.customer_id=o.customer_id",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Join"
+      ]
+    },
+    {
+      "id": "06-05",
+      "chapter_id": "06",
+      "title": "哪些客户还没下单",
+      "prompt": "使用 LEFT JOIN 找出没有任何订单的客户，输出 customer_id、customer_name。",
+      "lesson": "JOIN 根据关联键把两张表组合。INNER JOIN 只保留两侧匹配的记录，LEFT JOIN 保留左表全部记录，右侧没有匹配时为 NULL。关联一对多数据会增加行数，这通常是正常现象。用表别名明确同名字段，并用主外键关联，不要用姓名关联。",
+      "example_sql": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id LIMIT 5;",
+      "starter_sql": "",
+      "hints": [
+        "用右表非空主键是否为 NULL 判断有没有匹配。",
+        "LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL"
+      ],
+      "answer_sql": "SELECT c.customer_id,c.customer_name FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL",
+      "wrong_sql": "SELECT c.customer_id,c.customer_name FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NOT NULL",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Join"
+      ]
+    },
+    {
+      "id": "06-06",
+      "chapter_id": "06",
+      "title": "哪些商品尚未售出",
+      "prompt": "找出没有出现在任何订单明细中的商品，不区分订单状态，输出 product_id、product_name。",
+      "lesson": "JOIN 根据关联键把两张表组合。INNER JOIN 只保留两侧匹配的记录，LEFT JOIN 保留左表全部记录，右侧没有匹配时为 NULL。关联一对多数据会增加行数，这通常是正常现象。用表别名明确同名字段，并用主外键关联，不要用姓名关联。",
+      "example_sql": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id LIMIT 5;",
+      "starter_sql": "",
+      "hints": [
+        "从商品表出发，保留未匹配到明细的商品。",
+        "LEFT JOIN order_items i ON p.product_id=i.product_id WHERE i.item_id IS NULL"
+      ],
+      "answer_sql": "SELECT p.product_id,p.product_name FROM products p LEFT JOIN order_items i ON p.product_id=i.product_id WHERE i.item_id IS NULL",
+      "wrong_sql": "SELECT p.product_id,p.product_name FROM products p JOIN order_items i ON p.product_id=i.product_id",
+      "equivalent_sql": [],
+      "output_columns": [],
+      "compare_order": false,
+      "check_aliases": false,
+      "decimal_places": null,
+      "required_constructs": [
+        "Join"
+      ]
+    }
+  ]
+}
