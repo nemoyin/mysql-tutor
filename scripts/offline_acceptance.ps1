@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$Root)
+﻿param([Parameter(Mandatory=$true)][string]$Root)
 $ErrorActionPreference = 'Stop'
 $taskRoot = (Resolve-Path -LiteralPath $Root).Path
 $taskRequired = @('MySQL学习工具.exe','runtime/mysql/bin/mysqld.exe','runtime/manifest.json','web/index.html','content/chapters/01.json')

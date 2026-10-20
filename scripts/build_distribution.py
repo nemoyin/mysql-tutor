@@ -48,6 +48,11 @@ for package in (root/'frontend/node_modules').glob('**/package.json'):
         if data.get('name') and data.get('license'): frontend[data['name']]=dict(version=data.get('version'),license=data['license'])
     except (ValueError,OSError): pass
 (output/'frontend-licenses.json').write_text(json.dumps(frontend,ensure_ascii=False,indent=2),encoding='utf-8')
+for file in (root/'frontend/node_modules').rglob('*'):
+    if file.is_file() and file.name.lower().startswith(('license','copying','notice')):
+        target=licenses/'frontend'/file.relative_to(root/'frontend/node_modules')
+        target.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copy2(file,target)
 archive=output.with_suffix('.zip')
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as zip:
     for file in output.rglob('*'):

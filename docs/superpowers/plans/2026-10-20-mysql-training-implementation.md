@@ -10,6 +10,8 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-20-mysql-training-design.md`（用户已确认）。
 
+**执行结果（2026-10-20）：** 第一版代码和便携包已交付；详细任务证据与实施裁决见 `docs/implementation-ledger.md`。57 项后端、3 项前端和 1 条真实浏览器流程通过，最终打包程序通过正常及异常退出后的重启验证。原下列步骤保留为计划基线；不能由此推断未提供环境的检查已完成。干净 Windows 10/11、非管理员环境验收仍待目标环境复验，详见 `docs/acceptance.md`。
+
 ## Global Constraints
 
 - 单机独立使用，第一版只做 MySQL，Hive 留待后续。

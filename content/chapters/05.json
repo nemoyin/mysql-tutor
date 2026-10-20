@@ -15,7 +15,7 @@
       "starter_sql": "",
       "hints": [
         "城市缺失的客户也要计入总人数。",
-        "SELECT COUNT(*) AS customer_count FROM customers;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT COUNT(*) AS <题目要求的别名> FROM <客户表名>;"
       ],
       "answer_sql": "SELECT COUNT(*) AS customer_count FROM customers",
       "wrong_sql": "SELECT COUNT(city) AS customer_count FROM customers",
@@ -38,7 +38,7 @@
       "starter_sql": "",
       "hints": [
         "明细行数不等于商品件数。",
-        "SELECT SUM(quantity) AS total_quantity FROM order_items;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT SUM(<数量字段>) AS <题目要求的别名> FROM <明细表名>;"
       ],
       "answer_sql": "SELECT SUM(quantity) AS total_quantity FROM order_items",
       "wrong_sql": "SELECT COUNT(*) AS total_quantity FROM order_items",
@@ -82,7 +82,7 @@
       "starter_sql": "",
       "hints": [
         "两个聚合可以写在同一个 SELECT 中。",
-        "SELECT MIN(price) AS min_price, MAX(price) AS max_price FROM products;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT MIN(<标价字段>) AS <最低价别名>, MAX(<标价字段>) AS <最高价别名> FROM <商品表名>;"
       ],
       "answer_sql": "SELECT MIN(price) AS min_price,MAX(price) AS max_price FROM products",
       "wrong_sql": "SELECT MAX(price) AS min_price,MIN(price) AS max_price FROM products",
@@ -105,7 +105,7 @@
       "starter_sql": "",
       "hints": [
         "NULL 城市也形成一个分组，统计该组人数用 COUNT(*)。",
-        "SELECT city, COUNT(*) AS customer_count FROM customers GROUP BY city;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT <城市字段>, COUNT(*) AS <人数别名> FROM <客户表名> GROUP BY <城市字段>;"
       ],
       "answer_sql": "SELECT city,COUNT(*) AS customer_count FROM customers GROUP BY city",
       "wrong_sql": "SELECT city,COUNT(city) AS customer_count FROM customers GROUP BY city",

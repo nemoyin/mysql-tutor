@@ -35,4 +35,16 @@ test('learner can run without submitting, complete a problem and recover progres
  await expect(page.getByRole('button',{name:'运行 SQL',exact:true})).toBeVisible();
  await page.screenshot({path:path.resolve(__dirname,'../../docs/screenshots/lab-1280.png'),fullPage:true});
  expect(external).toEqual([]);
+ await page.getByRole('button',{name:/课程学习/}).click();
+ await page.locator('.course-rail summary').filter({hasText:'查询进阶'}).click();
+ await page.getByRole('button',{name:'高于平均价的商品',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'高于平均价的商品',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'工具设置',exact:true}).click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'重置',exact:true}).click();
+ await expect(page.locator('.modal')).toHaveCount(0);
+ await page.getByRole('button',{name:'学习首页',exact:true}).click();
+ await page.reload();
+ await page.getByRole('button',{name:/课程学习/}).click();
+ await expect(page.getByRole('heading',{name:'第一次认识客户',exact:true})).toBeVisible();
 });

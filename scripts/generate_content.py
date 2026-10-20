@@ -91,6 +91,21 @@ problem('每月完成了多少笔订单','只统计 completed 订单，按下单
 problem('已完成订单的分类销售额','关联分类、商品、明细和订单，只统计 completed 订单，输出 category_name、sales（保留 2 位小数），销售额降序，同额分类名称升序。',"SELECT c.category_name,ROUND(SUM(i.quantity*i.unit_price),2) AS sales FROM categories c JOIN products p ON c.category_id=p.category_id JOIN order_items i ON p.product_id=i.product_id JOIN orders o ON i.order_id=o.order_id WHERE o.status='completed' GROUP BY c.category_id,c.category_name ORDER BY sales DESC,c.category_name ASC","SELECT c.category_name,ROUND(SUM(i.unit_price),2) AS sales FROM categories c JOIN products p ON c.category_id=p.category_id JOIN order_items i ON p.product_id=i.product_id JOIN orders o ON i.order_id=o.order_id WHERE o.status='completed' GROUP BY c.category_id,c.category_name ORDER BY sales DESC,c.category_name ASC",'分类经过商品连接明细，再连接订单限定状态，金额别忘乘数量。','SUM(i.quantity*i.unit_price)，GROUP BY c.category_id,c.category_name',True)
 problem('消费最多的五位客户','只统计 completed 订单，按客户汇总成交金额，输出 customer_id、customer_name、sales（保留 2 位小数），销售额降序，同额客户编号升序，取前 5 位。',"SELECT c.customer_id,c.customer_name,ROUND(SUM(i.quantity*i.unit_price),2) AS sales FROM customers c JOIN orders o ON c.customer_id=o.customer_id JOIN order_items i ON o.order_id=i.order_id WHERE o.status='completed' GROUP BY c.customer_id,c.customer_name ORDER BY sales DESC,c.customer_id ASC LIMIT 5","SELECT c.customer_id,c.customer_name,ROUND(SUM(i.quantity*i.unit_price),2) AS sales FROM customers c JOIN orders o ON c.customer_id=o.customer_id JOIN order_items i ON o.order_id=i.order_id WHERE o.status='completed' GROUP BY c.customer_id,c.customer_name ORDER BY sales ASC,c.customer_id ASC LIMIT 5",'客户姓名不能唯一标识客户，按客户编号一起分组。','GROUP BY c.customer_id,c.customer_name ORDER BY sales DESC,c.customer_id ASC LIMIT 5',True)
 
+# Normal hints explain structure; complete solutions belong only to answer reveal.
+templates={
+    '01-02':'SELECT * FROM <商品表名>;',
+    '02-01':'SELECT <商品名称字段>, <标价字段> FROM <商品表名>;',
+    '02-03':'SELECT DISTINCT <城市字段> FROM <客户表名>;',
+    '02-04':'SELECT <明细编号>, <数量字段> * <成交单价字段> AS <金额别名> FROM <明细表名>;',
+    '02-05':'SELECT <客户编号>, <客户姓名>, <城市字段> FROM <客户表名>;',
+    '05-01':'SELECT COUNT(*) AS <题目要求的别名> FROM <客户表名>;',
+    '05-02':'SELECT SUM(<数量字段>) AS <题目要求的别名> FROM <明细表名>;',
+    '05-04':'SELECT MIN(<标价字段>) AS <最低价别名>, MAX(<标价字段>) AS <最高价别名> FROM <商品表名>;',
+    '05-05':'SELECT <城市字段>, COUNT(*) AS <人数别名> FROM <客户表名> GROUP BY <城市字段>;',
+}
+for c in chapters:
+    for p in c['problems']:
+        if p['id'] in templates:p['hints'][1]='结构参考（请自行替换尖括号中的内容）：'+templates[p['id']]
 # These alternatives change table qualification only; they demonstrate acceptance of valid aliases.
 for c in chapters:
     for p in c['problems']:

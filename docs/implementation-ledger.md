@@ -29,3 +29,18 @@ Task 10: in progress — 发行组装测试 RED→GREEN；已生成真实便携�
 Ruling: 后端测试使用临时独立实例，避免与开发预览的学习记录和后台数据库冲突。发行包测试产生的 data 不会放入交付 ZIP。
 Ruling: 执行技能要求最终 fresh-context reviewer；只委托一次只读整体验证，不委托开发任务，保持用户选择的顺序开发。
 Ruling: 当前没有干净 Windows 10/11 虚拟机；不能声称跨干净系统验收完成，在验收文档中明确保留此项。
+
+Final review: independent read-only review identified 3 Important findings and 1 Minor finding; none Critical. Reviewer verified probes on isolated instances, leaving preview untouched.
+Final: fixed abnormal launcher exit orphaning MySQL — real abrupt-parent termination/restart test RED→GREEN; Windows job kill-on-close owns both initializer and server children.
+Final: fixed MySQL executable-comment parser/execution mismatch — both forbidden SLEEP and metadata bypass reproductions RED→GREEN; quoted comment-looking text remains allowed.
+Final: fixed 9 normal second hints exposing passing answers — full content hint grading test RED→GREEN; second hints now incomplete structural templates, answers still only available via recorded reveal.
+Final: Ruling: reset-position finding regraded Important because reset explicitly promises clearing continue position — add browser regression, clear in-memory scope and profile-specific localStorage on successful reset — cost if wrong is misleading reset behavior.
+Final review declined-to-judge rulings: clean Windows/non-admin/physical disconnect deployment remains explicitly unverified; proposed fixes are verified by regression tests and full suite, not by a second reviewer.
+Final: Ruling: new repository has only the feature branch and no base/remote — keep source committed locally without merge or push; no integration decision is required for this local artifact delivery.
+
+Final fix-pass verification: 57 pytest PASS (33.28s), 3 Vitest PASS, complete browser learning + reset-position + external-network interception flow PASS. Frontend build PASS; Vite reports a non-blocking chunk-size advisory (~702 kB, local/offline delivery), deferred optimization only.
+Final review: no deferred correctness findings. Clean-system deployment remains an explicitly unverified environment item, not a passing test.
+
+Task 10: complete for available host — final frozen-executable smoke PASS with restricted PATH, query, grade, normal restart persistence and abrupt-launcher termination/restart. Final initialization measured 5.81s on current host. Distribution structure PASS. Clean Win10/11/non-admin acceptance remains open in docs/acceptance.md.
+
+Delivery: dist/MySQL学习工具-v0.1.0.zip, 305990488 bytes, SHA-256 15a522b747261a06d1bd72ad5a1595aeda5ea0f6bb5c668ee33c9353c9f56fbe. Full ZIP integrity PASS, no learner data directory in archive. Local preview retained on 127.0.0.1:18765.

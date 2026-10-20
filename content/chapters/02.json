@@ -15,7 +15,7 @@
       "starter_sql": "",
       "hints": [
         "不需要星号，只列出商品名称与标价。",
-        "SELECT product_name, price FROM products;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT <商品名称字段>, <标价字段> FROM <商品表名>;"
       ],
       "answer_sql": "SELECT product_name,price FROM products",
       "wrong_sql": "SELECT * FROM products",
@@ -61,7 +61,7 @@
       "starter_sql": "",
       "hints": [
         "多个客户来自同一城市，城市列表需要去重。",
-        "SELECT DISTINCT city FROM customers;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT DISTINCT <城市字段> FROM <客户表名>;"
       ],
       "answer_sql": "SELECT DISTINCT city FROM customers",
       "wrong_sql": "SELECT city FROM customers",
@@ -84,7 +84,7 @@
       "starter_sql": "",
       "hints": [
         "成交单价不是整条明细的金额，还要乘数量。",
-        "SELECT item_id, quantity * unit_price AS line_amount FROM order_items;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT <明细编号>, <数量字段> * <成交单价字段> AS <金额别名> FROM <明细表名>;"
       ],
       "answer_sql": "SELECT item_id,quantity*unit_price AS line_amount FROM order_items",
       "wrong_sql": "SELECT item_id,unit_price AS line_amount FROM order_items",
@@ -105,7 +105,7 @@
       "starter_sql": "",
       "hints": [
         "客户编号是身份标识，姓名可能相同。",
-        "SELECT customer_id, customer_name, city FROM customers;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT <客户编号>, <客户姓名>, <城市字段> FROM <客户表名>;"
       ],
       "answer_sql": "SELECT customer_id,customer_name,city FROM customers",
       "wrong_sql": "SELECT DISTINCT customer_name,city FROM customers",

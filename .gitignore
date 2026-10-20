@@ -13,3 +13,5 @@ test-results/
 playwright-report/
 *.log
 *.tsbuildinfo
+SQLStudio.spec
+frontend/test-results/

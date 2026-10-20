@@ -38,7 +38,7 @@
       "starter_sql": "",
       "hints": [
         "先在数据参考中找到“商品”对应的英文表名。",
-        "SELECT * FROM products;"
+        "结构参考（请自行替换尖括号中的内容）：SELECT * FROM <商品表名>;"
       ],
       "answer_sql": "SELECT * FROM products",
       "wrong_sql": "SELECT * FROM categories",

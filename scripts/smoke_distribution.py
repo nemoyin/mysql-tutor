@@ -58,8 +58,13 @@ try:
     assert any(p['id']==pid for p in boot['profiles'])
     assert request(f'/profiles/{pid}/drafts/01-01')['sql']=='SELECT * FROM customers'
     assert request(f'/profiles/{pid}/progress')['01-01']['mode']=='independent'
+    # The frozen executable must also release its database when terminated abruptly.
+    process.terminate();process.wait(timeout=15)
+    time.sleep(.3)
+    process,boot=launch();token=boot['token']
+    assert request(f'/profiles/{pid}/progress')['01-01']['mode']=='independent'
     request('/admin/shutdown',{'confirmation':'shutdown'});process.wait(timeout=30)
-    print(json.dumps(dict(status='passed',startup_seconds=startup,restricted_path=True,restart_persistence=True,port=port),ensure_ascii=False))
+    print(json.dumps(dict(status='passed',startup_seconds=startup,restricted_path=True,restart_persistence=True,abrupt_restart=True,port=port),ensure_ascii=False))
 finally:
     if process and process.poll() is None:
         try:

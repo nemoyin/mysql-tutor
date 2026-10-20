@@ -26,7 +26,7 @@ export default function App(){
   if(action==='restore'){if(!confirm('恢复练习数据会重新建立电商数据，不会删除学员、草稿、历史或学习进度。确定继续？'))return;path='/admin/restore';body={confirmation:'restore-training'}}
   if(action==='reset'){if(!confirm('仅重置当前学员的完成进度、答案查看记录和继续学习位置。草稿、历史和已保存 SQL 保留。确定继续？'))return;path=`/profiles/${profile!.id}/reset-progress`;body={confirmation:'reset-progress'}}
   if(action==='shutdown'){if(!confirm('保存当前草稿并退出工具？数据库会随工具一起关闭。'))return;path='/admin/shutdown';body={confirmation:'shutdown'}}
-  setWorking(true);try{await guard.current();await api(path,body);if(action==='shutdown')setClosed(true);else{await refreshProgress();setBoot(await api('/bootstrap'));setSettings(false)}}catch(e:any){setError(e.message)}finally{setWorking(false)}
+  setWorking(true);try{await guard.current();await api(path,body);if(action==='shutdown')setClosed(true);else{if(action==='reset'){setScope('01-01');localStorage.removeItem('currentScope:'+profile!.id)}await refreshProgress();setBoot(await api('/bootstrap'));setSettings(false)}}catch(e:any){setError(e.message)}finally{setWorking(false)}
  }
  if(closed)return <div className="standalone"><Check size={40}/><h1>本次学习已保存</h1><p>工具已退出，可以关闭此页面。下次启动后继续学习。</p></div>;
  if(!boot)return <div className="standalone"><Database size={38}/><h1>SQL 学习工坊</h1><p>{error||'正在打开你的学习空间…'}</p>{error&&<button onClick={()=>location.reload()}>重新打开</button>}</div>;

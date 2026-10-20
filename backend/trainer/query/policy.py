@@ -18,11 +18,39 @@ class ValidatedQuery:
     referenced_tables: set[str]
 
 
+def reject_executable_comments(sql: str):
+    """MySQL executes /*!...*/ while a generic AST parser treats it as a comment."""
+    index=0
+    while index<len(sql):
+        char=sql[index]
+        if char in "'\"`":
+            quote=char;index+=1
+            while index<len(sql):
+                if sql[index]=='\\': index+=2;continue
+                if sql[index]==quote:
+                    if index+1<len(sql) and sql[index+1]==quote: index+=2;continue
+                    index+=1;break
+                index+=1
+            continue
+        if char=='#' or (sql.startswith('--',index) and (index+2==len(sql) or sql[index+2].isspace())):
+            newline=sql.find('\n',index)
+            index=len(sql) if newline<0 else newline+1
+            continue
+        if sql.startswith('/*',index):
+            if sql.startswith('/*!',index):
+                raise QueryFailure('unsupported_query','MySQL executable comment','练习区不支持可执行注释，请直接写出查询语句。')
+            end=sql.find('*/',index+2)
+            index=len(sql) if end<0 else end+2
+            continue
+        index+=1
+
+
 def validate_query(sql: str) -> ValidatedQuery:
     def reject(message):
         raise QueryFailure('unsupported_query', message, message)
     if not sql.strip(): reject('请先输入一条 SQL 查询。')
     if len(sql) > 20000: reject('SQL 太长，请将查询控制在 20000 字符以内。')
+    reject_executable_comments(sql)
     try:
         statements = [s for s in sqlglot.parse(sql, read='mysql') if s is not None]
     except sqlglot.errors.ParseError as error:

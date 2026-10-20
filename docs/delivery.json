@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "archive": "MySQL学习工具-v0.1.0.zip",
+  "bytes": 305990488,
+  "sha256": "15a522b747261a06d1bd72ad5a1595aeda5ea0f6bb5c668ee33c9353c9f56fbe",
+  "backend_tests": 57,
+  "frontend_tests": 3,
+  "browser_flows": 1,
+  "packaged_smoke": "passed",
+  "clean_windows_vm": "not_verified"
+}

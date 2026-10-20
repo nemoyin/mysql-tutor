@@ -12,6 +12,7 @@ from pathlib import Path
 import pymysql
 from trainer.config import RuntimePaths
 from trainer.contracts import RuntimeState
+from trainer.runtime.windows_job import ChildProcessJob
 
 HIDDEN = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
 SQL_MODE = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'
@@ -66,6 +67,7 @@ class RuntimeManager:
         self._state = RuntimeState('stopped')
         self.operation_lock = threading.RLock()
         self.config = {}
+        self._job = None
 
     def state(self):
         return self._state
@@ -110,6 +112,7 @@ class RuntimeManager:
         ensure_writable(self.paths.root / 'data')
         self._acquire()
         try:
+            self._job=ChildProcessJob()
             self._start_owned()
         except Exception:
             self.stop()
@@ -135,9 +138,11 @@ class RuntimeManager:
                 staging.rename(data / f'mysql-interrupted-{time.time_ns()}')
             args = [str(mysql_bin), '--no-defaults', '--initialize-insecure',
                     f'--basedir={alias / "runtime/mysql"}', f'--datadir={alias / "data/mysql-initializing"}']
-            result = subprocess.run(args, capture_output=True, creationflags=HIDDEN, timeout=120)
-            if result.returncode:
-                (data / 'logs/initialize.log').write_bytes(result.stderr)
+            initializer = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,creationflags=HIDDEN)
+            self._job.assign(initializer)
+            _, stderr=initializer.communicate(timeout=120)
+            if initializer.returncode:
+                (data / 'logs/initialize.log').write_bytes(stderr)
                 raise RuntimeError('MySQL 初始化失败，请检查 data/logs/initialize.log。')
             if self.paths.mysql_data.exists():
                 raise RuntimeError('数据目录不完整，请保留目录并联系维护人员。')
@@ -152,6 +157,7 @@ class RuntimeManager:
             '--innodb-buffer-pool-size=64M', '--max-connections=20', '--local-infile=OFF',
             '--secure-file-priv=NULL', '--skip-log-bin', '--console']
         self.process = subprocess.Popen(args, stdout=self._log, stderr=self._log, creationflags=HIDDEN)
+        self._job.assign(self.process)
         deadline = time.monotonic() + 60
         connection = None
         while time.monotonic() < deadline:
@@ -195,6 +201,9 @@ class RuntimeManager:
                     self.process.kill()
                     self.process.wait(timeout=5)
         self.process = None
+        if self._job:
+            self._job.close()
+            self._job=None
         if self._log:
             self._log.close()
             self._log = None

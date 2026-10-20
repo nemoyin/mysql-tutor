@@ -8,6 +8,7 @@ import pytest
     'SELECT COUNT(*), ROUND(AVG(price),2) FROM products',
     'SELECT * FROM products WHERE category_id=1 AND price>100',
     "SELECT DATE_FORMAT(order_date,'%Y-%m') FROM orders",
+    "SELECT '/*! ordinary text */' AS example",
 ])
 def test_allows_teaching_queries(sql):
     from trainer.query.policy import validate_query
@@ -21,6 +22,8 @@ def test_allows_teaching_queries(sql):
     'SELECT * FROM customers FOR UPDATE','SELECT * FROM mysql.user',
     'SELECT @@version','SELECT @a:=1','SELECT GET_LOCK("x",5)',
     'SELECT * FROM training.customers JOIN information_schema.tables',
+    'SELECT /*! SLEEP(0.1), */ 1',
+    'SELECT TABLE_SCHEMA,TABLE_NAME FROM /*! information_schema.tables */ customers LIMIT 1',
 ])
 def test_rejects_outside_supported_readonly_queries(sql):
     from trainer.query.policy import validate_query

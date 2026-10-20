@@ -19,3 +19,18 @@ def test_all_content_is_complete_and_answers_work(runtime):
             assert grade_submission(executor,p,sql).status=='passed',p['id']
             equivalents+=1
     assert equivalents>=10
+
+
+def test_normal_hints_do_not_disclose_complete_passing_answers(runtime):
+    from trainer.content.loader import load_chapters
+    from trainer.grading.service import grade_submission
+    from trainer.contracts import QueryFailure
+    executor=QueryExecutor(runtime)
+    leaked=[]
+    for chapter in load_chapters(runtime.paths.content):
+        for problem in chapter['problems']:
+            for hint in problem['hints']:
+                try:
+                    if grade_submission(executor,problem,hint).status=='passed': leaked.append(problem['id'])
+                except QueryFailure: pass
+    assert leaked==[],f'Normal hints reveal answers: {leaked}'
