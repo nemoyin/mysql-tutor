@@ -1,17 +1,50 @@
+# Python development environments and caches
 .venv/
+venv/
 __pycache__/
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Frontend dependencies and generated output
 node_modules/
 frontend/dist/
+coverage/
+*.tsbuildinfo
+
+# Portable distribution, bundled runtime, and local learner data
 dist/
 build/
 data/
 runtime/mysql/
 runtime/downloads/
+*.sqlite
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+SQLStudio.spec
+
+# Local configuration and credentials (keep example templates)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Test output and agent working files
 .superpowers/
 test-results/
 playwright-report/
 *.log
-*.tsbuildinfo
-SQLStudio.spec
 frontend/test-results/
+
+# Editor and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
