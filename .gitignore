@@ -12,3 +12,4 @@ runtime/downloads/
 test-results/
 playwright-report/
 *.log
+*.tsbuildinfo

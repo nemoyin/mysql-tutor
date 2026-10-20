@@ -1,0 +1,179 @@
+[
+  {
+    "name": "customers",
+    "label": "客户",
+    "description": "客户档案；同名不代表同一个人。",
+    "columns": [
+      {
+        "name": "customer_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "客户编号（主键）"
+      },
+      {
+        "name": "customer_name",
+        "mysql_type": "VARCHAR",
+        "nullable": false,
+        "description": "客户姓名"
+      },
+      {
+        "name": "city",
+        "mysql_type": "VARCHAR",
+        "nullable": true,
+        "description": "所在城市，可为空"
+      },
+      {
+        "name": "registered_at",
+        "mysql_type": "DATE",
+        "nullable": false,
+        "description": "注册日期"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "categories",
+    "label": "商品分类",
+    "description": "商品所属分类。",
+    "columns": [
+      {
+        "name": "category_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "分类编号（主键）"
+      },
+      {
+        "name": "category_name",
+        "mysql_type": "VARCHAR",
+        "nullable": false,
+        "description": "分类名称"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "products",
+    "label": "商品",
+    "description": "商品当前标价，与历史成交价可能不同。",
+    "columns": [
+      {
+        "name": "product_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "商品编号（主键）"
+      },
+      {
+        "name": "product_name",
+        "mysql_type": "VARCHAR",
+        "nullable": false,
+        "description": "商品名称"
+      },
+      {
+        "name": "category_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "分类编号"
+      },
+      {
+        "name": "price",
+        "mysql_type": "DECIMAL(10,2)",
+        "nullable": false,
+        "description": "当前标价"
+      }
+    ],
+    "relations": [
+      {
+        "column": "category_id",
+        "target_table": "categories",
+        "target_column": "category_id"
+      }
+    ]
+  },
+  {
+    "name": "orders",
+    "label": "订单",
+    "description": "每行一笔订单；completed 已完成，pending 待处理，cancelled 已取消。",
+    "columns": [
+      {
+        "name": "order_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "订单编号（主键）"
+      },
+      {
+        "name": "customer_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "客户编号"
+      },
+      {
+        "name": "order_date",
+        "mysql_type": "DATE",
+        "nullable": false,
+        "description": "下单日期"
+      },
+      {
+        "name": "status",
+        "mysql_type": "VARCHAR",
+        "nullable": false,
+        "description": "订单状态"
+      }
+    ],
+    "relations": [
+      {
+        "column": "customer_id",
+        "target_table": "customers",
+        "target_column": "customer_id"
+      }
+    ]
+  },
+  {
+    "name": "order_items",
+    "label": "订单明细",
+    "description": "每行一种购买商品；销售额 = quantity × unit_price。",
+    "columns": [
+      {
+        "name": "item_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "明细编号（主键）"
+      },
+      {
+        "name": "order_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "订单编号"
+      },
+      {
+        "name": "product_id",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "商品编号"
+      },
+      {
+        "name": "quantity",
+        "mysql_type": "INT",
+        "nullable": false,
+        "description": "购买数量"
+      },
+      {
+        "name": "unit_price",
+        "mysql_type": "DECIMAL(10,2)",
+        "nullable": false,
+        "description": "成交单价"
+      }
+    ],
+    "relations": [
+      {
+        "column": "order_id",
+        "target_table": "orders",
+        "target_column": "order_id"
+      },
+      {
+        "column": "product_id",
+        "target_table": "products",
+        "target_column": "product_id"
+      }
+    ]
+  }
+]

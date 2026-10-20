@@ -26,3 +26,13 @@ def test_readonly_directory_has_actionable_error(tmp_path):
     file.write_text('x')
     with pytest.raises(RuntimeError, match='写入'):
         ensure_writable(file)
+
+
+def test_paths_with_chinese_and_spaces(tmp_path):
+    from trainer.runtime.manager import mysql_compatible_root
+    target = tmp_path / '学习 工具'
+    target.mkdir()
+    alias = mysql_compatible_root(target)
+    assert str(alias).isascii()
+    (alias / 'probe.txt').write_text('中文', encoding='utf-8')
+    assert (target / 'probe.txt').read_text(encoding='utf-8') == '中文'

@@ -5,6 +5,8 @@ import socket
 import subprocess
 import time
 import threading
+import hashlib
+import tempfile
 from pathlib import Path
 
 import pymysql
@@ -13,6 +15,26 @@ from trainer.contracts import RuntimeState
 
 HIDDEN = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
 SQL_MODE = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'
+
+
+def mysql_compatible_root(root: Path) -> Path:
+    """MySQL's Windows argument parser requires an ASCII alias for Unicode paths."""
+    if os.name != 'nt' or str(root).isascii():
+        return root
+    parent = Path(tempfile.gettempdir()) / 'mysql-training-paths'
+    if not str(parent).isascii():
+        raise RuntimeError('系统临时目录包含中文，请将工具解压到纯英文目录。')
+    parent.mkdir(exist_ok=True)
+    alias = parent / hashlib.sha256(str(root.resolve()).encode()).hexdigest()[:20]
+    if alias.exists():
+        if alias.resolve() != root.resolve():
+            raise RuntimeError('数据库路径映射冲突，请联系维护人员。')
+    else:
+        result = subprocess.run(['cmd.exe', '/c', 'mklink', '/J', str(alias), str(root)],
+                                capture_output=True, creationflags=HIDDEN)
+        if result.returncode:
+            raise RuntimeError('无法创建中文目录兼容映射，请将工具解压到纯英文目录。')
+    return alias
 
 
 def choose_port(preferred: int) -> int:
@@ -96,6 +118,8 @@ class RuntimeManager:
 
     def _start_owned(self):
         data = self.paths.root / 'data'
+        alias = mysql_compatible_root(self.paths.root)
+        mysql_bin = alias / 'runtime/mysql/bin/mysqld.exe'
         (data / 'logs').mkdir(exist_ok=True)
         config_file = data / 'instance.json'
         if config_file.exists():
@@ -109,8 +133,8 @@ class RuntimeManager:
             staging = data / 'mysql-initializing'
             if staging.exists():
                 staging.rename(data / f'mysql-interrupted-{time.time_ns()}')
-            args = [str(self.paths.mysql_bin), '--no-defaults', '--initialize-insecure',
-                    f'--basedir={self.paths.mysql_bin.parent.parent}', f'--datadir={staging}']
+            args = [str(mysql_bin), '--no-defaults', '--initialize-insecure',
+                    f'--basedir={alias / "runtime/mysql"}', f'--datadir={alias / "data/mysql-initializing"}']
             result = subprocess.run(args, capture_output=True, creationflags=HIDDEN, timeout=120)
             if result.returncode:
                 (data / 'logs/initialize.log').write_bytes(result.stderr)
@@ -120,8 +144,8 @@ class RuntimeManager:
             staging.rename(self.paths.mysql_data)
         self.port = choose_port(13306)
         self._log = open(data / 'logs/mysql.log', 'ab')
-        args = [str(self.paths.mysql_bin), '--no-defaults',
-            f'--basedir={self.paths.mysql_bin.parent.parent}', f'--datadir={self.paths.mysql_data}',
+        args = [str(mysql_bin), '--no-defaults',
+            f'--basedir={alias / "runtime/mysql"}', f'--datadir={alias / "data/mysql"}',
             '--bind-address=127.0.0.1', f'--port={self.port}', '--mysqlx=OFF',
             '--character-set-server=utf8mb4', '--collation-server=utf8mb4_0900_ai_ci',
             f'--sql-mode={SQL_MODE}', '--default-time-zone=+08:00',
